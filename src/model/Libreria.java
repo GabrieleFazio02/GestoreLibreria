@@ -2,10 +2,11 @@ package model;
 
 import is.strategy.OrdPerTitolo;
 import is.strategy.RicPerTitolo;
+import observer.Observer;
 import persistence.SingletonJSON;
 import is.strategy.RicStrategy;
 import is.strategy.OrdStrategy;
-import observer.guiUpdate;
+import observer.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class Libreria {
     private final SingletonJSON singletonJSON;
     private OrdStrategy ordStrategy;
     private RicStrategy ricStrategy;
-    private List<guiUpdate> observers;
+    private final List<Observer> observers;
 
     public Libreria() {
         this.singletonJSON = SingletonJSON.getInstance();
@@ -25,6 +26,24 @@ public class Libreria {
         this.ricStrategy = new RicPerTitolo();
         this.observers = new ArrayList<>();
     }
+
+    public void attach(Observer observer) {
+        if (observer != null && !observers.contains(observer)) {
+            observers.add(observer);
+            observer.update(libri);
+        }
+    }
+
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(libri);
+        }
+    }
+
 
     public void setOrdStrategy(OrdStrategy ordSt) {
         this.ordStrategy = ordSt;
@@ -44,26 +63,12 @@ public class Libreria {
         return ricStrategy.cerca(libri, criterio);
     }
 
-    public void addObserver(guiUpdate observer) {
-        this.observers.add(observer);
-    }
-
-    public void removeObserver(guiUpdate observer) {
-        this.observers.remove(observer);
-    }
-
-    public void notifyObservers() {
-        for (guiUpdate observer : observers) {
-            observer.update(libri);
-        }
-    }
 
     public void aggiungiLibro(Libro libro) {
         if(!libri.contains(libro)) {
             this.libri.add(libro);
             salvaLib();
             ordinaLib();
-            notifyObservers();
         }
     }
 
@@ -90,6 +95,7 @@ public class Libreria {
 
     public void caricaLib(){
         this.libri = new ArrayList<>(singletonJSON.leggiDaLibreria());
+        notifyObservers();
     }
 
     public void stampaLibri() {
