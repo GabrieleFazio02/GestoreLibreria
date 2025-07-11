@@ -1,3 +1,5 @@
+package model;
+
 import java.util.Objects;
 
 public class Libro {
@@ -15,15 +17,16 @@ public class Libro {
 
     public Libro() {}
 
-    public Libro(String titolo, String autore, String isbn, String genere, int annoPubblicazione,int valutazione, StatoLettura statoLettura) {
+    public Libro(String titolo, String autore, String isbn, String genere, int annoPubblicazione) {
         this.titolo = titolo;
         this.autore = autore;
         this.isbn = isbn;
         this.genere = genere;
         this.annoPubblicazione = annoPubblicazione;
-        setValutazione(valutazione);
-        this.statoLettura = statoLettura;
+        this.valutazione = 0;
+        this.statoLettura = StatoLettura.DA_LEGGERE;
     }
+
 
     public String getTitolo() {
         return titolo;
@@ -70,11 +73,24 @@ public class Libro {
     }
 
     public void setValutazione(int valutazione) {
+        //La valutazione può essere inserita solo una volta che lo stato del libro è "LETTO"
+        if(this.statoLettura != StatoLettura.LETTO) {
+            throw new IllegalStateException("La valutazione può essere inserita solo per libri già letti!");
+        }
         if(valutazione < 1 || valutazione > 5) {
             throw new IllegalArgumentException("Valutazione non valida, deve essere compresa tra 1 e 5");
         }
         this.valutazione = valutazione;
     }
+
+    public void setStatoLettura(StatoLettura nuovoStato) {
+        //Se cambiamo lo stato da LETTO a un altro stato, resettiamo la valutazione
+        if (nuovoStato != StatoLettura.LETTO && this.valutazione != 0) {
+            this.valutazione = 0;
+        }
+        this.statoLettura = nuovoStato;
+    }
+
 
     public StatoLettura getStatoLettura() {
         return statoLettura;
@@ -82,11 +98,21 @@ public class Libro {
 
     @Override
     public String toString() {
-        return "Libro [titolo=" + titolo + ", autore=" + autore + ", isbn=" + isbn +
-                ", genere=" + genere + ", annoPubblicazione=" + annoPubblicazione +
-                ", valutazione=" + valutazione + ", statoLettura=" + statoLettura + "]";
+        //oltre alle informazioni principali stampa la valutazione solo se presente, di conseguenza solo se il libro è stato letto
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("\"%s\" di %s - %s (%d) - ISBN: %s",
+                titolo, autore, genere, annoPubblicazione, isbn));
 
+        if (statoLettura == StatoLettura.LETTO && valutazione > 0) {
+            sb.append(String.format(" - %d/5 stelle", valutazione));
+        }
+
+        sb.append(String.format(" - %s", statoLettura));
+
+        return sb.toString();
     }
+
+
 
     public boolean equals(Object obj) {
         if (this == obj) return true;
