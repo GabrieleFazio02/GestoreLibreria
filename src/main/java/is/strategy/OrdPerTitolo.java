@@ -8,7 +8,7 @@ public class OrdPerTitolo implements OrdStrategy {
 
     @Override
     public void ordina(List<Libro> libri) {
-        libri.sort((l1, l2) -> l1.getTitolo().compareTo(l2.getTitolo()));
+        libri.sort((l1, l2) -> l1.getTitolo().compareToIgnoreCase(l2.getTitolo()));
 
     }
 }

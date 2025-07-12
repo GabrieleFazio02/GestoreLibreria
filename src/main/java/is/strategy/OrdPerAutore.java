@@ -8,6 +8,6 @@ public class OrdPerAutore implements OrdStrategy {
 
     @Override
     public void ordina(List<Libro> libri) {
-        libri.sort((l1, l2) -> l1.getAutore().compareTo(l2.getAutore()));
+        libri.sort((l1, l2) -> l1.getAutore().compareToIgnoreCase(l2.getAutore()));
     }
 }

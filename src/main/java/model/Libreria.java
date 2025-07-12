@@ -18,6 +18,7 @@ public class Libreria {
     private OrdStrategy ordStrategy;
     private RicStrategy ricStrategy;
     private final List<Observer> observers;
+    //private final List<Subject> subjects;
 
     public Libreria() {
         this.singletonJSON = SingletonJSON.getInstance();
@@ -25,6 +26,7 @@ public class Libreria {
         this.ordStrategy = new OrdPerTitolo();
         this.ricStrategy = new RicPerTitolo();
         this.observers = new ArrayList<>();
+        //this.subjects = new ArrayList<>();
     }
 
     public void attach(Observer observer) {
@@ -37,6 +39,7 @@ public class Libreria {
     public void detach(Observer observer) {
         observers.remove(observer);
     }
+
 
     public void notifyObservers() {
         for (Observer observer : observers) {

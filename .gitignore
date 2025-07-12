@@ -30,3 +30,13 @@ bin/
 
 ### Data Files ###
 libreria.json
+
+# Maven
+target/
+*.iml
+.idea/libraries/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/modules.xml
