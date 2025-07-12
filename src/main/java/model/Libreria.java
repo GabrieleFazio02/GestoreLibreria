@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Libreria {
+public class Libreria implements Subject {
     private List<Libro> libri;
     private final SingletonJSON singletonJSON;
     private OrdStrategy ordStrategy;
     private RicStrategy ricStrategy;
     private final List<Observer> observers;
-    //private final List<Subject> subjects;
+
 
     public Libreria() {
         this.singletonJSON = SingletonJSON.getInstance();
@@ -26,7 +26,7 @@ public class Libreria {
         this.ordStrategy = new OrdPerTitolo();
         this.ricStrategy = new RicPerTitolo();
         this.observers = new ArrayList<>();
-        //this.subjects = new ArrayList<>();
+
     }
 
     public void attach(Observer observer) {
@@ -87,7 +87,7 @@ public class Libreria {
             libri.set(i, libroN);
             salvaLib();
             ordinaLib();
-            notifyObservers();
+            //notifyObservers(); non serve più perchè il metodo ordinaLib() chiama già notifyObservers()
         }
     }
 
@@ -101,17 +101,6 @@ public class Libreria {
         notifyObservers();
     }
 
-    public void stampaLibri() {
-        System.out.println("Ecco tutti i libri presenti nella libreria:");
-        if (libri.isEmpty()) {
-            System.out.println("La libreria è vuota");
-        } else {
-            for (Libro libro : libri) {
-                System.out.println(libro.toString());
-            }
-        }
-        System.out.println("================================");
-    }
 
     public List<Libro> getLibri() {
         return new ArrayList<>(libri);

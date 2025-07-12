@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * Dialog specializzato per la ricerca dei libri
- * Implementa i pattern Strategy per la ricerca
+ * Implementa il pattern Strategy per la ricerca
  */
 public class CercaDialog extends Dialog<List<Libro>> {
 
@@ -89,6 +89,10 @@ public class CercaDialog extends Dialog<List<Libro>> {
 
         cercaAnnoMin = new Spinner<>(annoMin, annoMax, annoMin);
         cercaAnnoMax = new Spinner<>(annoMin, annoMax, annoMax);
+
+        //In questo modo di può modificare anche senza usare per forza le frecce
+        cercaAnnoMin.setEditable(true);
+        cercaAnnoMax.setEditable(true);
 
         // Spinner per valutazione minima
         cercaValutazioneMin = new Spinner<>(0, 5, 0);
@@ -193,7 +197,7 @@ public class CercaDialog extends Dialog<List<Libro>> {
         cercaAnnoMax.getValueFactory().setValue(
                 libreria.getLibri().stream()
                         .mapToInt(Libro::getAnnoPubblicazione)
-                        .max().orElse(2024)
+                        .max().orElse(2030)
         );
         cercaValutazioneMin.getValueFactory().setValue(0);
         tipoCercaCombo.setValue("Ricerca Avanzata");
@@ -211,7 +215,7 @@ public class CercaDialog extends Dialog<List<Libro>> {
     private List<Libro> eseguiRicerca() {
         String tipoRicerca = tipoCercaCombo.getValue();
 
-        // IMPLEMENTAZIONE CORRETTA DEI PATTERN STRATEGY
+        // IMPLEMENTAZIONE DEL PATTERN STRATEGY
         switch (tipoRicerca) {
             case "Ricerca per Titolo":
                 if (!cercaTitolo.getText().trim().isEmpty()) {
@@ -244,7 +248,7 @@ public class CercaDialog extends Dialog<List<Libro>> {
 
     private List<Libro> eseguiRicercaAvanzata() {
         // Per la ricerca avanzata, usiamo il filtering manuale
-        // In alternativa, potresti creare una RicStrategy combinata
+
         return libreria.getLibri().stream()
                 .filter(libro -> {
                     // Filtro per titolo

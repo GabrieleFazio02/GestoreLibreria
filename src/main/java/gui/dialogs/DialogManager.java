@@ -1,8 +1,6 @@
 package gui.dialogs;
 
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.geometry.Insets;
 import javafx.stage.Stage;
 import model.Libro;
 import model.Libreria;
@@ -12,7 +10,7 @@ import java.util.Optional;
 
 /**
  * Gestore centralizzato per tutti i dialog dell'applicazione
- * Implementa il pattern Factory per la creazione dei dialog
+ * Implementa una versione semplificata del pattern Factory per la creazione degli alert per i Dialog
  */
 public class DialogManager {
 
@@ -53,8 +51,6 @@ public class DialogManager {
 
         result.ifPresent(libroModificato -> {
             if (libroModificato != null) {
-                //libreria.rimuoviLibro(libroSelezionato);
-                //libreria.aggiungiLibro(libroModificato);
                 libreria.modificaLibro(libroSelezionato, libroModificato);
                 mostraMessaggioSuccesso("Libro modificato con successo!");
             }
