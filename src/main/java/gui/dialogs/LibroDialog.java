@@ -15,6 +15,7 @@ public class LibroDialog extends Dialog<Libro> {
     private final ComboBox<Libro.StatoLettura> statoCombo = new ComboBox<>();
     private final Spinner<Integer> valutazioneSpinner;
 
+
     public LibroDialog(Stage owner) {
         this(owner, null);
     }
@@ -116,9 +117,9 @@ public class LibroDialog extends Dialog<Libro> {
                     if (statoCombo.getValue() == Libro.StatoLettura.LETTO) {
                         nuovoLibro.setValutazione(valutazioneSpinner.getValue());
                     }
-                    else{
-                        nuovoLibro.setValutazione(0);
-                    }
+                    /*Rimosso il blocco else, in conflitto con il metodo setvalutazione() della classe Libro
+                    che sollevava l'eccezione quando si scegleva uno stato diverso da LETTO
+                    l'else prima settava comunque la valutazione a 0 (impossibile se non LETTO)*/
                     return nuovoLibro;
                 } catch (NumberFormatException e) {
                     // Questo non dovrebbe mai accadere perché la validazione è già stata fatta
@@ -159,6 +160,7 @@ public class LibroDialog extends Dialog<Libro> {
             statoCombo.requestFocus();
             return false;
         }
+
 
         // Verifica che l'anno sia un numero valido
         try {

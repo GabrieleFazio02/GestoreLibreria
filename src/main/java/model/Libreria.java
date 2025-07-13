@@ -66,13 +66,15 @@ public class Libreria implements Subject {
         return ricStrategy.cerca(libri, criterio);
     }
 
-
-    public void aggiungiLibro(Libro libro) {
-        if(!libri.contains(libro)) {
-            this.libri.add(libro);
-            salvaLib();
-            ordinaLib();
+    //cambiato il metodo aggiungi, per gestire l'ISBN dublicato, con conseguente cambiamento anche in DialogManager
+    public boolean aggiungiLibro(Libro libro) {
+        if(libri.contains(libro)) {
+            return false;
         }
+        this.libri.add(libro);
+        salvaLib();
+        ordinaLib();
+        return true;
     }
 
     public void rimuoviLibro(Libro libro) {
@@ -81,14 +83,26 @@ public class Libreria implements Subject {
         notifyObservers();
     }
 
-    public void modificaLibro(Libro libroV, Libro libroN) {
+    //cambiato il metodo modificaLibro, per gestire l'ISBN dublicato, con conseguente cambiamento anche in DialogManager
+    public boolean modificaLibro(Libro libroV, Libro libroN) {
         int i = libri.indexOf(libroV);
+
+        boolean isbnGiaPresente = libri.stream().anyMatch(l -> !l.equals(libroV) && l.getIsbn().equalsIgnoreCase(libroN.getIsbn()));
         if (i != -1) {
-            libri.set(i, libroN);
-            salvaLib();
-            ordinaLib();
-            //notifyObservers(); non serve più perchè il metodo ordinaLib() chiama già notifyObservers()
+            if (!isbnGiaPresente) {
+                libri.set(i, libroN);
+                salvaLib();
+                ordinaLib();
+                return true;
+                //notifyObservers(); non serve più perchè il metodo ordinaLib() chiama già notifyObservers()
+            }
         }
+        return false;
+    }
+
+    public boolean isbnGiaPresente(String isbn){
+        return libri.stream().anyMatch(l -> l.getIsbn().equalsIgnoreCase(isbn));
+
     }
 
 

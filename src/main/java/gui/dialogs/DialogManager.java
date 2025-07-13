@@ -30,9 +30,11 @@ public class DialogManager {
         Optional<Libro> result = dialog.showAndWait();
 
         result.ifPresent(libro -> {
-            if (libro != null) {
-                libreria.aggiungiLibro(libro);
+            if (libreria.aggiungiLibro(libro)) {
                 mostraMessaggioSuccesso("Libro aggiunto con successo!");
+            }
+            else{
+                mostraErrore("Errore", "Errore durante l'aggiunta del libro!, ISBN duplicato");
             }
         });
     }
@@ -50,9 +52,11 @@ public class DialogManager {
         Optional<Libro> result = dialog.showAndWait();
 
         result.ifPresent(libroModificato -> {
-            if (libroModificato != null) {
-                libreria.modificaLibro(libroSelezionato, libroModificato);
+            if (libreria.modificaLibro(libroSelezionato, libroModificato)) {
                 mostraMessaggioSuccesso("Libro modificato con successo!");
+            }
+            else{
+                mostraErrore("Errore", "Errore durante la modifica del libro!, ISBN duplicato");
             }
         });
     }
