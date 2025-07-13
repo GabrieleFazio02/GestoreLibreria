@@ -1,4 +1,8 @@
-package observer;
+/**
+ * Classe inutilizzata, utile per eventuali implementazioni di un altro observer futuro
+ */
+
+/*package observer;
 
 import model.Libro;
 
@@ -8,11 +12,10 @@ public class guiUpdate implements Observer{
 
 
 
-
     @Override
     public void update(List<Libro> libri){
         javafx.application.Platform.runLater(()->{});
 
 
     }
-}
+}*/
