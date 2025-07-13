@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Libro;
+import util.ISBNvalido;
 
 public class LibroDialog extends Dialog<Libro> {
     private final TextField titoloField = new TextField();
@@ -173,6 +174,15 @@ public class LibroDialog extends Dialog<Libro> {
         } catch (NumberFormatException e) {
             mostraErrore("L'anno deve essere un numero valido");
             annoField.requestFocus();
+            return false;
+        }
+
+        String isbn = isbnField.getText().trim();
+        if(!ISBNvalido.isISBN(isbn)){
+            mostraErrore("ISBN non plausibile. Deve avere:\n"
+                    + "• 10 cifre  oppure\n"
+                    + "• 13 cifre che iniziano con 978/979 seguite da - , ad es. 978-1234567890");
+            isbnField.requestFocus();
             return false;
         }
 
