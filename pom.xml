@@ -9,9 +9,10 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.release>22</maven.compiler.release> <!-- Usa release invece di source/target -->
+        <maven.compiler.release>22</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>22</javafx.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
     </properties>
 
     <dependencies>
@@ -19,12 +20,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
+            <version>24.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
+            <version>24.0.1</version>
         </dependency>
 
         <!-- JSON -->
@@ -32,6 +33,14 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.13.1</version>
+        </dependency>
+
+        <!-- JUnit5 (Jupiter) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -42,7 +51,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <release>22</release> <!-- Compatibile con Java 22 -->
+                    <release>22</release>
                     <compilerArgs>
                         <arg>-Xlint:all</arg>
                     </compilerArgs>
@@ -76,6 +85,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- JUnit 5 provider -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <useModulePath>false</useModulePath> <!-- evita warning con Java 22 -->
+                </configuration>
             </plugin>
         </plugins>
     </build>

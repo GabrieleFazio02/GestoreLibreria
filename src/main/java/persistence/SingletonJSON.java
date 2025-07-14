@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import model.Libro;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,7 @@ public class SingletonJSON {
     private static SingletonJSON instance;
     private Gson gson;
     private final String PATH = "libreria.json";
+    private static Path tempPath = null;
 
     //Usiamo il costruttore privato, per utilizzare il pattern Singleton,
     //usiamo questo pattern per assicurarci che ci sia sempre un'unica istanza del file JSON
@@ -29,12 +31,24 @@ public class SingletonJSON {
         return instance;
     }
 
+    //metodo per utilizzare un path alternativo del file json nei test
+    public static void overridePath(Path path) {
+        tempPath = path;
+    }
+
+    //serve per scegliere il file da utilizzare
+    private File getTargetFile() {
+        if (tempPath != null) {
+            return tempPath.toFile();
+        }
+        return new File(PATH);
+    }
+
 
     //Metodo per salavare i libri in libreria
-
     public void salvaInLibreria(List<Libro> libri) {
         try {
-            FileWriter fileWriter = new FileWriter(PATH);
+            FileWriter fileWriter = new FileWriter(getTargetFile());
             gson.toJson(libri, fileWriter);
             fileWriter.close();
         } catch (IOException e) {
@@ -44,7 +58,7 @@ public class SingletonJSON {
 
     //Metodo per leggere il contenuto della libreria
     public List<Libro> leggiDaLibreria() {
-        File file = new File(PATH);
+        File file = getTargetFile();
 
         if(!file.exists()) {
             return new ArrayList<>();

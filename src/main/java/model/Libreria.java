@@ -48,26 +48,26 @@ public class Libreria implements Subject {
     }
 
 
-    public void setOrdStrategy(OrdStrategy ordSt) {
+    public synchronized void setOrdStrategy(OrdStrategy ordSt) {
         this.ordStrategy = ordSt;
         ordinaLib();
     }
 
-    public void ordinaLib() {
+    public synchronized void ordinaLib() {
         ordStrategy.ordina(libri);
         notifyObservers();
     }
 
-    public void setRicStrategy(RicStrategy ricSt) {
+    public synchronized void setRicStrategy(RicStrategy ricSt) {
         this.ricStrategy = ricSt;
     }
 
-    public List<Libro> cercaLib(String criterio) {
+    public synchronized List<Libro> cercaLib(String criterio) {
         return ricStrategy.cerca(libri, criterio);
     }
 
     //cambiato il metodo aggiungi, per gestire l'ISBN dublicato, con conseguente cambiamento anche in DialogManager
-    public boolean aggiungiLibro(Libro libro) {
+    public synchronized boolean aggiungiLibro(Libro libro) {
         if(libri.contains(libro)) {
             return false;
         }
@@ -77,14 +77,17 @@ public class Libreria implements Subject {
         return true;
     }
 
-    public void rimuoviLibro(Libro libro) {
-        this.libri.remove(libro);
-        salvaLib();
-        notifyObservers();
+    public synchronized boolean rimuoviLibro(Libro libro) {
+        boolean rimosso = this.libri.remove(libro);
+        if (rimosso) {
+            salvaLib();
+            notifyObservers();
+        }
+        return rimosso;
     }
 
     //cambiato il metodo modificaLibro, per gestire l'ISBN dublicato, con conseguente cambiamento anche in DialogManager
-    public boolean modificaLibro(Libro libroV, Libro libroN) {
+    public synchronized boolean modificaLibro(Libro libroV, Libro libroN) {
         int i = libri.indexOf(libroV);
 
         boolean isbnGiaPresente = libri.stream().anyMatch(l -> !l.equals(libroV) && l.getIsbn().equalsIgnoreCase(libroN.getIsbn()));
@@ -100,23 +103,18 @@ public class Libreria implements Subject {
         return false;
     }
 
-    public boolean isbnGiaPresente(String isbn){
-        return libri.stream().anyMatch(l -> l.getIsbn().equalsIgnoreCase(isbn));
 
-    }
-
-
-    public void salvaLib(){
+    public synchronized void salvaLib(){
         singletonJSON.salvaInLibreria(libri);
     }
 
-    public void caricaLib(){
+    public synchronized void caricaLib(){
         this.libri = new ArrayList<>(singletonJSON.leggiDaLibreria());
         notifyObservers();
     }
 
 
-    public List<Libro> getLibri() {
+    public synchronized List<Libro> getLibri() {
         return new ArrayList<>(libri);
     }
 

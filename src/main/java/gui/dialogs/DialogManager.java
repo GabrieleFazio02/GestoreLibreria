@@ -79,8 +79,12 @@ public class DialogManager {
 
         conferma.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                libreria.rimuoviLibro(libroSelezionato);
-                mostraMessaggioSuccesso("Libro rimosso con successo!");
+                if(libreria.rimuoviLibro(libroSelezionato)){
+                    mostraMessaggioSuccesso("Libro rimosso con successo!");
+                }
+                else{
+                    mostraErrore("Errore", "Errore durante la rimozione del libro!");
+                }
             }
         });
     }
